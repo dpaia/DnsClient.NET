@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "benchmark_type": "codegen",
+  "language": "csharp",
+  "dotnet_sdk": "8.0",
+  "test_project": "test/DnsClient.Tests/DnsClient.Tests.csproj",
+  "test_framework_flag": "--framework net8.0",
+  "test_logger": "trx;LogFileName=results.trx",
+  "expected": {
+    "fail_to_pass": ["DnsClient.Tests.DnsRecordFactoryTestMethodCount.TestCountMethods"],
+    "pass_to_pass": ["DnsClient.Tests.DnsRecordFactoryTest"],
+    "fail_to_fail": ["API.Tests.Extensions.SeriesFilterTests.HasReleaseYear_IsInLast_Works", "API.Tests.Extensions.SeriesFilterTests.HasReleaseYear_IsNotInLast_Works"],
+    "fail_to_fail_strict": true
+  },
+  "patch": {
+    "source_patterns": ["test/DnsClient.Tests/DnsRecordFactoryTest.cs"],
+    "test_patterns": ["test/DnsClient.Tests/DnsRecordFactoryTestMethodCount.cs"]
+  }
+}
