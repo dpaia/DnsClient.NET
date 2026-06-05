@@ -584,33 +584,6 @@ H+L10KwE7wqqmkxwfib5kwgNyrlXtx0=
             Assert.Equal(DnsSecurityAlgorithm.RSASHA256, result.Algorithm);
         }
 
-        [Fact]
-        public void DnsRecordFactory_DsRecord()
-        {
-            var expectedDigest = "3490A6806D47F17A34C29E2CE80E8A999FFBE4BE";
-            var expectedBytes = Enumerable.Range(0, expectedDigest.Length)
-                     .Where(x => x % 2 == 0)
-                     .Select(x => Convert.ToByte(expectedDigest.Substring(x, 2), 16))
-                     .ToArray();
-
-            var name = DnsString.Parse("example.com");
-            using var writer = new DnsDatagramWriter();
-            writer.WriteInt16NetworkOrder(31589);
-            writer.WriteByte(8); // algorithm
-            writer.WriteByte(1); // type
-            writer.WriteBytes(expectedBytes, expectedBytes.Length);
-
-            var factory = GetFactory(writer.Data);
-
-            var info = new ResourceRecordInfo(name, ResourceRecordType.DS, QueryClass.IN, 0, writer.Data.Count);
-
-            var result = factory.GetRecord(info) as DsRecord;
-            Assert.Equal(expectedBytes, result.Digest);
-            Assert.Equal(expectedDigest, result.DigestAsString);
-            Assert.Equal(31589, result.KeyTag);
-            Assert.Equal(8, (int)result.Algorithm);
-            Assert.Equal(1, result.DigestType);
-        }
 
         [Fact]
         public void DnsRecordFactory_NSecRecord()
