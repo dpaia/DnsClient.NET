@@ -34,6 +34,7 @@ _run_tests() {
   # failure during the baseline test run.
   set +e
   dotnet test --no-build {{ instance.test_framework_flag }} "{{ instance.test_project }}" \
+    --settings /tmp/runsettings.xml \
     --logger "{{ instance.test_logger }}" \
     --results-directory "$ARTIFACTS_DIR" \
     > "/tmp/${label}_stdout.log" 2> "/tmp/${label}_stderr.log"
