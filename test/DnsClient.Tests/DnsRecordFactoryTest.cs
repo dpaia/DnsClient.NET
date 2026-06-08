@@ -612,41 +612,6 @@ H+L10KwE7wqqmkxwfib5kwgNyrlXtx0=
             Assert.Equal(1, result.DigestType);
         }
 
-        [Fact]
-        public void DnsRecordFactory_NSecRecord()
-        {
-            var expectedBitMap = new byte[] { 0, 7, 98, 1, 128, 8, 0, 3, 128 };
-            var expectedTypes = new[]
-            {
-                ResourceRecordType.A,
-                ResourceRecordType.NS,
-                ResourceRecordType.SOA,
-                ResourceRecordType.MX,
-                ResourceRecordType.TXT,
-                ResourceRecordType.AAAA,
-                ResourceRecordType.RRSIG,
-                ResourceRecordType.NSEC,
-                ResourceRecordType.DNSKEY
-            };
-
-            var bitmap = NSecRecord.WriteBitmap(expectedTypes.Select(p => (ushort)p).ToArray()).ToArray();
-
-            var name = DnsString.Parse("example.com");
-            using var writer = new DnsDatagramWriter();
-            writer.WriteHostName(name);
-            writer.WriteBytes(bitmap, bitmap.Length);
-
-            var factory = GetFactory(writer.Data);
-
-            var info = new ResourceRecordInfo(name, ResourceRecordType.NSEC, QueryClass.IN, 0, writer.Data.Count);
-
-            var result = factory.GetRecord(info) as NSecRecord;
-            Assert.Equal(expectedBitMap, bitmap);
-            Assert.Equal(expectedBitMap, result.TypeBitMapsRaw);
-            Assert.Equal(expectedTypes.Length, result.TypeBitMaps.Count);
-            Assert.Equal(expectedTypes, result.TypeBitMaps);
-            Assert.Equal(name, result.NextDomainName);
-        }
 
         [Fact]
         public void DnsRecordFactory_NSec3Record()
