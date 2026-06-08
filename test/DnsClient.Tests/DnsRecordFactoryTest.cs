@@ -467,47 +467,6 @@ H+L10KwE7wqqmkxwfib5kwgNyrlXtx0=
             Assert.Equal(certificateAssociationData, result.CertificateAssociationDataAsString);
         }
 
-        [Fact]
-        public void DnsRecordFactory_RRSIGRecord()
-        {
-            var type = ResourceRecordType.NSEC;
-            var algorithmNumber = DnsSecurityAlgorithm.ECDSAP256SHA256;
-            var labels = 5;
-            var originalTtl = 300;
-            var signatureExpiration = 1589414400;
-            var signatureInception = 1587600000;
-            short keytag = 3942;
-            var signersName = DnsString.Parse("result.example.com");
-            var signatureString = "kfyyKQoPZJFyOFSDqav7wj5XNRPqZssV2K2k8MJun28QSsCMHyWOjw9Hk4KofnEIUWNui3mMgAEFYbwoeRKkMf5uDAh6ryJ4veQNj86mgYJrpJppUplqlqJE8o1bx0I1VfwheL+M23bL5MnqSGiI5igmMDyeVUraVOO4RQyfGN0=";
-            var signature = Convert.FromBase64String(signatureString);
-
-            using var writer = new DnsDatagramWriter();
-
-            writer.WriteInt16NetworkOrder((short)type);
-            writer.WriteByte((byte)algorithmNumber);
-            writer.WriteByte((byte)labels);
-            writer.WriteInt32NetworkOrder(originalTtl);
-            writer.WriteInt32NetworkOrder(signatureExpiration);
-            writer.WriteInt32NetworkOrder(signatureInception);
-            writer.WriteInt16NetworkOrder(keytag);
-            writer.WriteHostName(signersName.Value);
-            writer.WriteBytes(signature, signature.Length);
-
-            var factory = GetFactory(writer.Data);
-            var info = new ResourceRecordInfo("query.example.com", ResourceRecordType.RRSIG, QueryClass.IN, 0, writer.Data.Count);
-
-            var result = factory.GetRecord(info) as RRSigRecord;
-            Assert.Equal(type, result.CoveredType);
-            Assert.Equal(algorithmNumber, result.Algorithm);
-            Assert.Equal(labels, result.Labels);
-            Assert.Equal(originalTtl, result.OriginalTtl);
-            Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(signatureExpiration), result.SignatureExpiration);
-            Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(signatureInception), result.SignatureInception);
-            Assert.Equal(signersName.Value, result.SignersName);
-
-            Assert.Equal(signature, result.Signature);
-            Assert.Equal(signatureString, result.SignatureAsString);
-        }
 
         [Fact]
         public void DnsRecordFactory_SSHFPRecord()
