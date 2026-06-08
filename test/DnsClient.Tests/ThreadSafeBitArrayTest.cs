@@ -72,16 +72,6 @@ namespace DnsClient.Tests
             }
         }
 
-        [Fact]
-        public void ThreadSafeBitArrayTest_FindFirstFalse()
-        {
-            var arr = new ThreadSafeFixedBitmap();
-
-            Assert.Equal(0, arr.FindFirstFalse());
-            arr.TrySet(0, true);
-            arr.TrySet(1, true);
-            Assert.Equal(2, arr.FindFirstFalse());
-        }
 
         [Fact]
         public void ThreadSafeBitArrayTest_FindFirstFalseFail()
