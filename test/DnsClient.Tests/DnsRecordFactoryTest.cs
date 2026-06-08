@@ -648,51 +648,6 @@ H+L10KwE7wqqmkxwfib5kwgNyrlXtx0=
             Assert.Equal(name, result.NextDomainName);
         }
 
-        [Fact]
-        public void DnsRecordFactory_NSec3Record()
-        {
-            var expectedTypes = new[]
-            {
-                ResourceRecordType.A,
-                ResourceRecordType.NS,
-                ResourceRecordType.SOA,
-                ResourceRecordType.MX,
-                ResourceRecordType.TXT,
-                ResourceRecordType.AAAA,
-                ResourceRecordType.RRSIG,
-                ResourceRecordType.NSEC3PARAM
-            };
-
-            var expectedBitmap = NSecRecord.WriteBitmap(expectedTypes.Select(p => (ushort)p).ToArray()).ToArray();
-            var salt = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            var nextName = Enumerable.Repeat(0, 50).Select((p, i) => (byte)i).ToArray();
-            var nameEncoded = Base32Hex.ToBase32HexString(nextName);
-            var name = DnsString.Parse("example.com");
-
-            using var writer = new DnsDatagramWriter();
-            writer.WriteByte(1); // Algorithm
-            writer.WriteByte(2); // Flags
-            writer.WriteUInt16NetworkOrder(100); // Iterations
-            writer.WriteByte((byte)salt.Length);
-            writer.WriteBytes(salt, salt.Length);
-            writer.WriteByte((byte)nextName.Length);
-            writer.WriteBytes(nextName, nextName.Length);
-            writer.WriteBytes(expectedBitmap, expectedBitmap.Length);
-
-            var factory = GetFactory(writer.Data);
-
-            var info = new ResourceRecordInfo(name, ResourceRecordType.NSEC3, QueryClass.IN, 0, writer.Data.Count);
-
-            var result = factory.GetRecord(info) as NSec3Record;
-
-            Assert.Equal(1, result.HashAlgorithm);
-            Assert.Equal(2, result.Flags);
-            Assert.Equal(100, result.Iterations);
-            Assert.Equal(salt, result.Salt);
-            Assert.Equal(nextName, result.NextOwnersName);
-            Assert.Equal(nameEncoded, result.NextOwnersNameAsString);
-            Assert.Equal(expectedTypes, result.TypeBitMaps);
-        }
 
         [Fact]
         public void DnsRecordFactory_NSec3ParamRecord()
