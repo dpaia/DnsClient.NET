@@ -10,6 +10,6 @@ public class ThreadSafeBitArrayTestMethodCount
     {
         var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
         var methods = typeof(ThreadSafeBitArrayTest).GetMethods(flags);
-        Assert.Equal(11, methods.Length);
+         Assert.Equal(12, methods.Length);
     }
 }
