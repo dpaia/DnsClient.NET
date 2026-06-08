@@ -10,6 +10,6 @@ public class DnsRecordFactoryTestMethodCount
     {
         var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
         var methods = typeof(DnsRecordFactoryTest).GetMethods(flags);
-        Assert.Equal(34, methods.Length);
+         Assert.Equal(35, methods.Length);
     }
 }
