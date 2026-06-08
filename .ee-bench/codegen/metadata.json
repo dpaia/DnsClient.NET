@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "benchmark_type": "codegen",
+  "language": "csharp",
+  "dotnet_sdk": "8.0",
+  "test_project": "test/DnsClient.Tests/DnsClient.Tests.csproj",
+  "test_framework_flag": "--framework net8.0",
+  "test_logger": "trx;LogFileName=results.trx",
+  "expected": {
+    "fail_to_pass": ["DnsClient.Tests.LookupTestMethodCount.TestCountMethods"],
+    "pass_to_pass": ["DnsClient.Tests.LookupTest"],
+    "fail_to_fail": [],
+    "fail_to_fail_strict": true
+  },
+  "patch": {
+    "source_patterns": ["test/DnsClient.Tests/LookupTest.cs"],
+    "test_patterns": ["test/DnsClient.Tests/LookupTestMethodCount.cs"]
+  }
+}

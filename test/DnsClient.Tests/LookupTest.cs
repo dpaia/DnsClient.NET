@@ -807,17 +807,6 @@ namespace DnsClient.Tests
         }
 
         //[Fact]
-        public void Ip_Arpa_v6_Valid()
-        {
-            var ip = NameServer.GooglePublicDns2IPv6.Address;
-            var client = new LookupClient(NameServer.GooglePublicDnsIPv6);
-
-            var result = DnsString.Parse(ip.GetArpaName());
-            var queryResult = client.QueryReverse(ip);
-
-            Assert.Equal("8.8.8.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.8.4.0.6.8.4.1.0.0.2.ip6.arpa.", result);
-            Assert.Contains("dns.google", queryResult.Answers.PtrRecords().First().PtrDomainName, StringComparison.OrdinalIgnoreCase);
-        }
 
         [Fact]
         public async Task Lookup_Query_NaPtr()
