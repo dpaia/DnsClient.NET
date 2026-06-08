@@ -10,6 +10,6 @@ public class LookupTestMethodCount
     {
         var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
         var methods = typeof(LookupTest).GetMethods(flags);
-        Assert.Equal(70, methods.Length);
+         Assert.Equal(71, methods.Length);
     }
 }
