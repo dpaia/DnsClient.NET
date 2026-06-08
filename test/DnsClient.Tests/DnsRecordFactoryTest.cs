@@ -433,6 +433,39 @@ H+L10KwE7wqqmkxwfib5kwgNyrlXtx0=
             Assert.Equal(result.EscapedText.ElementAt(0), text);
         }
 
+        [Fact]
+        public void DnsRecordFactory_TLSARecord()
+        {
+            var certificateUsage = 0;
+            var selector = 1;
+            var matchingType = 1;
+            var certificateAssociationData = "CDE0D742D6998AA554A92D890F8184C698CFAC8A26FA59875A990C03E576343C";
+            var expectedBytes = Enumerable.Range(0, certificateAssociationData.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(certificateAssociationData.Substring(x, 2), 16))
+                .ToArray();
+
+            var data = new List<byte>()
+            {
+                (byte)certificateUsage,
+                (byte)selector,
+                (byte)matchingType,
+            };
+
+            data.AddRange(expectedBytes);
+
+            var factory = GetFactory(data.ToArray());
+            var info = new ResourceRecordInfo("query.example.com", ResourceRecordType.TLSA, QueryClass.IN, 0, data.Count);
+
+            var result = factory.GetRecord(info) as TlsaRecord;
+
+            Assert.Equal((TlsaCertificateUsage)certificateUsage, result.CertificateUsage);
+            Assert.Equal((TlsaSelector)selector, result.Selector);
+            Assert.Equal((TlsaMatchingType)matchingType, result.MatchingType);
+            // Checking this in both directions
+            Assert.Equal(expectedBytes, result.CertificateAssociationData);
+            Assert.Equal(certificateAssociationData, result.CertificateAssociationDataAsString);
+        }
 
         [Fact]
         public void DnsRecordFactory_RRSIGRecord()
